@@ -15,9 +15,13 @@ const Agents = memo(
 				{field.name === "agent" &&
 					agents !== undefined &&
 					agents.result.map(agent => (
-						<SelectItem key={agent.id} value={`${agent.id}`}>
-							{agent.name}
-						</SelectItem>
+						<>
+							{agent.name.length > 0 && (
+								<SelectItem key={agent.id} value={`${agent.name}_${agent.id}`}>
+									{agent.name}
+								</SelectItem>
+							)}
+						</>
 					))}
 			</>
 		)

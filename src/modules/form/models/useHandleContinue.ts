@@ -6,6 +6,7 @@ export const useHandleContinue = () => {
 	const [tokenInput, setTokenInput] = useState("")
 	const [show, setShow] = useState(false)
 	const [error, setError] = useState("")
+	const [isLoading, setIsLoading] = useState(false)
 	const [orderForm, setOrderForm] = useState<OrderForm>({
 		agents: undefined,
 		organizations: undefined,
@@ -16,6 +17,7 @@ export const useHandleContinue = () => {
 	const formInfo = useMemo(() => new FormInfo(tokenInput.trim()), [tokenInput])
 	const handleContinue = useCallback(async () => {
 		try {
+			setIsLoading(true)
 			const agents = await formInfo.getAgents()
 			const payboxes = await formInfo.getPayBoxesList()
 			const organizations = await formInfo.getOrganizations()
@@ -42,9 +44,12 @@ export const useHandleContinue = () => {
 		} catch (error: unknown) {
 			if (error instanceof Error) {
 				setError(error.message)
+				setShow(false)
 			} else {
 				setError("Unknown error")
 			}
+		} finally {
+			setIsLoading(false)
 		}
 	}, [formInfo])
 	const handleTokenField = useCallback(
@@ -58,5 +63,6 @@ export const useHandleContinue = () => {
 		handleTokenField,
 		show,
 		error,
+		isLoading,
 	}
 }
