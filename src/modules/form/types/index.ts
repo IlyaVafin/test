@@ -134,6 +134,37 @@ export interface OrderForm {
 export interface InputField {
 	label: string
 	id: string
-	type: "select" | "text"
+	type: "select" | "text" | "search"
 	name?: "agent" | "check" | "organization" | "price_type" | "warehouse"
+}
+
+export interface Good {
+  name: string | null;
+  type: string | null;
+  description_short: string | null;
+  description_long: string | null;
+  code: string | null;
+  unit: string | null;
+  category: number;
+  manufacturer: string | null;
+  chatting_percent: number | null;
+  cashback_type: string;
+  cashback_value: number;
+  external_id: string | null;
+  tags: string[];
+  seo_title: string | null;
+  seo_description: string | null;
+  seo_keywords: string[];
+  id: number;
+  unit_name: string | null;
+  barcodes: string[];
+  prices: string[] | null;
+  balances: string[] | null;
+  attributes: string[] | null;
+  photos: string[] | null;
+  group_id: string | null;
+  group_name: string | null;
+  is_main: boolean | null;
+  updated_at: number;
+  created_at: number;
 }

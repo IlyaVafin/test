@@ -35,6 +35,6 @@ export const inputsFields: InputField[] = [
 	{
 		label: "Поиск товара",
 		id: "search-item",
-		type: "text",
+		type: "search",
 	},
 ]

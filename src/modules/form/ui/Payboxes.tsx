@@ -13,7 +13,7 @@ const Payboxes = ({
 			{field.name === "check" &&
 				payboxes !== undefined &&
 				payboxes.result.map(paybox => (
-					<SelectItem key={paybox.id} value={`${paybox.id}`}>
+					<SelectItem key={paybox.id} value={`${paybox.name}_${paybox.id}`}>
 						{paybox.name}
 					</SelectItem>
 				))}

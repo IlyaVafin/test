@@ -13,7 +13,7 @@ const Organizations = ({
 			{field.name === "organization" &&
 				organizations !== undefined &&
 				organizations.result.map(organization => (
-					<SelectItem key={organization.id} value={`${organization.id}`}>
+					<SelectItem key={organization.id} value={`${organization.full_name}_${organization.id}`}>
 						{organization.full_name ??
 							organization.work_name ??
 							organization.short_name}

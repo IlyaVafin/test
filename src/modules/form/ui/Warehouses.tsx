@@ -14,7 +14,7 @@ const Warehouses = ({
 			{field.name === "warehouse" &&
 				warehouses !== undefined &&
 				warehouses.result.map(warehouse => (
-					<SelectItem key={warehouse.id} value={`${warehouse.id}`}>
+					<SelectItem key={warehouse.id} value={`${warehouse.name}_${warehouse.id}`}>
 						{warehouse.name}
 					</SelectItem>
 				))}

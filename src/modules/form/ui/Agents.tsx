@@ -18,7 +18,8 @@ const Agents = memo(
 						<>
 							{agent.name.length > 0 && (
 								<SelectItem key={agent.id} value={`${agent.name}_${agent.id}`}>
-									{agent.name}
+									{agent.name} (
+									{agent.phone.length > 0 ? agent.phone : "Нет номера"})
 								</SelectItem>
 							)}
 						</>

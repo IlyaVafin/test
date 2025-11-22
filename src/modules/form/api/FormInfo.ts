@@ -1,6 +1,7 @@
 import { api } from "@/shared/api/instance"
 import type {
 	Agent,
+	Good,
 	Organization,
 	Price,
 	ResponseResult,
@@ -18,10 +19,10 @@ export class FormInfo {
 			const response = await api.get<ResponseResult<Agent>>(
 				`/contragents?token=${this.token}`
 			)
-     
+
 			return response
 		} catch (error: unknown) {
-			console.error(error)
+			return `${error}`
 		}
 	}
 	getPayBoxesList = async () => {
@@ -31,7 +32,7 @@ export class FormInfo {
 			)
 			return response
 		} catch (error) {
-			console.error(error)
+			return `${error}`
 		}
 	}
 	getWarehouses = async () => {
@@ -41,7 +42,7 @@ export class FormInfo {
 			)
 			return response
 		} catch (error) {
-			console.error(error)
+			return `${error}`
 		}
 	}
 	getOrganizations = async () => {
@@ -51,7 +52,7 @@ export class FormInfo {
 			)
 			return response
 		} catch (error) {
-			console.error(error)
+			return `${error}`
 		}
 	}
 	getPriceTypes = async () => {
@@ -61,7 +62,15 @@ export class FormInfo {
 			)
 			return response
 		} catch (error) {
-			console.error(error)
+			return `${error}`
+		}
+	}
+	getGoods = async () => {
+		try {
+			const response = await api.get<ResponseResult<Good>>(`/nomenclature?token=${this.token}`)
+			return response
+		} catch (error) {
+			return `${error}`
 		}
 	}
 }

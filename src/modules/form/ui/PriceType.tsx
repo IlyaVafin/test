@@ -13,7 +13,7 @@ const PriceType = ({
 			{field.name === "price_type" &&
 				typePrice?.result !== undefined &&
 				typePrice.result.map(price => (
-					<SelectItem key={price.id} value={`${price.id}`}>
+					<SelectItem key={price.id} value={`${price.name}_${price.id}`}>
 						{price.name}
 					</SelectItem>
 				))}

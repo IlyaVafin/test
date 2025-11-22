@@ -5,23 +5,20 @@ import { memo, type ChangeEvent } from "react"
 const TokenField = memo(
 	({
 		tokenInput,
-		handleContinue,
 		handleTokenField,
 		isLoading,
 	}: {
 		tokenInput: string
 		handleTokenField: (e: ChangeEvent<HTMLInputElement>) => void
-		handleContinue: () => Promise<void>
 		isLoading: boolean
 	}) => {
 		return (
 			<div className='max-w-[420px] w-full flex flex-col gap-4'>
-				<label htmlFor=''>Токен</label>
-				<Input value={tokenInput} onChange={handleTokenField} />
+				<label htmlFor='token_input'>Токен</label>
+				<Input value={tokenInput} id="token_input" onChange={handleTokenField} />
 				<Button
 					disabled={isLoading}
-					type='button'
-					onClick={handleContinue}
+					type='submit'
 					className='w-full'
 				>
 					Продолжить

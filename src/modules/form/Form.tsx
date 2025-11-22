@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import {
 	Select,
@@ -15,7 +16,6 @@ import Payboxes from "./ui/Payboxes"
 import PriceType from "./ui/PriceType"
 import TokenField from "./ui/TokenField"
 import Warehouses from "./ui/Warehouses"
-import { Button } from "@/components/ui/Button"
 
 const Form = () => {
 	const {
@@ -26,16 +26,24 @@ const Form = () => {
 		show,
 		isLoading,
 		tokenInput,
+		loadGoodsOnFocus,
+		goods,
+		searchQuery,
+		changeSearchQuery,
+		filtered,
+		onKeyDownSelect,
 	} = useHandleContinue()
 	const { agents, organizations, payboxes, typePrice, warehouses } = orderForm
 	const id = useId()
 
 	return (
 		<div className='flex items-center justify-center mt-10'>
-			<form className='w-[420px] border border-input p-10 rounded-2xl flex flex-col gap-4'>
+			<form onSubmit={e => {
+				e.preventDefault()
+				handleContinue()
+			}} className='w-105 border border-input p-10 rounded-2xl flex flex-col gap-4'>
 				<TokenField
 					tokenInput={tokenInput}
-					handleContinue={handleContinue}
 					handleTokenField={handleTokenField}
 					isLoading={isLoading}
 				/>
@@ -47,15 +55,30 @@ const Form = () => {
 								<label htmlFor={`${field.label}_${id}`}>{field.label}</label>
 								{field.type === "select" && (
 									<Select
-										onValueChange={e => console.log(e)}
+										onOpenChange={open => changeSearchQuery(open)}
 										name={`${field.label}_${id}`}
 									>
-										<SelectTrigger className='max-w-[338px] w-full'>
-											<SelectValue placeholder={field.label} />
+										<SelectTrigger
+											id={`${field.label}_${id}`}
+											className='max-w-84.5 w-full'
+										>
+											<SelectValue
+												placeholder={
+													searchQuery && field.name === "agent"
+														? searchQuery
+														: field.label
+												}
+											/>
 										</SelectTrigger>
-										<SelectContent>
+										<SelectContent onKeyDown={e => onKeyDownSelect(e)}>
 											<SelectGroup>
-												<Agents field={field} agents={agents} />
+												<Agents
+													field={field}
+													agents={{
+														count: agents?.count ?? 0,
+														result: filtered ?? [],
+													}}
+												/>
 												<Payboxes field={field} payboxes={payboxes} />
 												<Warehouses field={field} warehouses={warehouses} />
 												<Organizations
@@ -67,8 +90,12 @@ const Form = () => {
 										</SelectContent>
 									</Select>
 								)}
-								{field.type === "text" && (
-									<Input type={field.type} id={`${field.label}_${id}`} />
+								{(field.type === "text" || field.type === "search") && (
+									<Input
+										onFocus={loadGoodsOnFocus}
+										type={field.type}
+										id={`${field.label}_${id}`}
+									/>
 								)}
 							</div>
 						))}
