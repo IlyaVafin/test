@@ -1,6 +1,5 @@
 import { Input } from "@/components/ui/Input"
 import { debounce } from "@/shared/utils/debounce."
-import React from "react"
 import type { InputField } from "../types"
 
 const SearchGoodsField = ({

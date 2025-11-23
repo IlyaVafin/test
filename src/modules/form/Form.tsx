@@ -119,10 +119,9 @@ const Form = () => {
 								)}
 								{field.type === "select" && (
 									<Select
-									
-										onOpenChange={open => changeSearchQuery(open)}
+										onOpenChange={(open: boolean) => changeSearchQuery(open)}
 										name={`${field.label}_${id}`}
-										onValueChange={val => {
+										onValueChange={(val: string) => {
 											if (field.name === "agent") setSelectedAgent(val)
 											else return
 										}}
@@ -135,7 +134,9 @@ const Form = () => {
 										</SelectTrigger>
 										<SelectContent
 											className='max-w-[338px] min-h-8'
-											onKeyDown={e => onKeyDownSelect(e)}
+											onKeyDown={(
+												e: React.KeyboardEvent<HTMLDivElement>
+											) => onKeyDownSelect(e)}
 										>
 											<SelectGroup>
 												<Agents
