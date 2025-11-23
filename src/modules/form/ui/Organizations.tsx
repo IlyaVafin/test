@@ -1,4 +1,4 @@
-import { SelectItem } from "@/components/ui/select"
+import { SelectItem } from "./../../../components/ui/select"
 import type { InputField, Organization, ResponseResult } from "../types"
 
 const Organizations = ({

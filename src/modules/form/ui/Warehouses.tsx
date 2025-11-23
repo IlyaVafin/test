@@ -1,5 +1,5 @@
 
-import { SelectItem } from "@/components/ui/select"
+import { SelectItem } from "./../../../components/ui/select"
 import type { InputField, ResponseResult, Warehouse } from "../types"
 
 const Warehouses = ({

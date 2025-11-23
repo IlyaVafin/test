@@ -1,4 +1,4 @@
-import { SelectItem } from "@/components/ui/select"
+import { SelectItem } from "./../../../components/ui/select"
 import { memo } from "react"
 import type { Agent, InputField } from "../types"
 import { Spinner } from "@/components/ui/spinner"
