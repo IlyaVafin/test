@@ -6,7 +6,7 @@ import {
 	SelectGroup,
 	SelectTrigger,
 	SelectValue,
-} from "./../../components/ui/select"
+} from "@/components/ui/select"
 import { Spinner } from "@/components/ui/spinner"
 import { useCallback, useId, useState } from "react"
 import { inputsFields } from "./const/inputsFields"
