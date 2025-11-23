@@ -12,7 +12,7 @@ export default defineConfig({
 		},
 	},
 	build: {
-		// Добавьте эту настройку для Vercel
+		outDir: "dist",
 		target: "es2022",
 	},
 })
