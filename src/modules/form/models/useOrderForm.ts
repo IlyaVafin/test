@@ -1,64 +1,63 @@
 import {
 	useCallback,
-	useMemo,
 	useState,
 	type ChangeEvent,
 	type KeyboardEvent,
 } from "react"
-import { FormInfo } from "../api/FormInfo"
-import type { OrderForm } from "../types"
+import type { Agent, OrderForm } from "../types"
+import { useGetAndValidateFormInfo } from "./useGetAndValidateFormInfo"
 import { useHandleGoods } from "./useHandleGoods"
-// TODO: RENAME useHandleContinue to useOrderForm
-export const useHandleContinue = () => {
+import { debounce } from "@/shared/utils/debounce."
+
+export const useOrderForm = () => {
 	const [tokenInput, setTokenInput] = useState("")
+	const [searchQuery, setSearchQuery] = useState("")
+	const [agents, setAgents] = useState<Agent[] | string>([])
+	const [isLoadingAgents, setIsLoadingAgents] = useState(false)
 	const [show, setShow] = useState(false)
 	const [error, setError] = useState("")
+	const [isOpen, setIsOpen] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
 	const [orderForm, setOrderForm] = useState<OrderForm>({
-		agents: undefined,
 		organizations: undefined,
 		payboxes: undefined,
 		warehouses: undefined,
 		typePrice: undefined,
 	})
-	const [searchQuery, setSearchQuery] = useState("")
-	const formInfo = useMemo(() => new FormInfo(tokenInput.trim()), [tokenInput])
-	const { goods, loadGoodsOnFocus } = useHandleGoods(formInfo)
-	const filtered = useMemo(() => {
-		return orderForm?.agents?.result.filter(agent =>
-			agent.phone
-				.toLowerCase()
-				.trim()
-				.includes(searchQuery.trim().toLowerCase())
-		)
-	}, [searchQuery, orderForm.agents?.result])
-	const isHaveFormInfo = useCallback(() => {
-		const { agents, organizations, payboxes, typePrice, warehouses } = orderForm
-		return !!(agents && organizations && payboxes && typePrice && warehouses)
-	}, [orderForm])
-	const getFormInfo = useCallback(async () => {
-		const agents = await formInfo.getAgents()
-		const payboxes = await formInfo.getPayBoxesList()
-		const organizations = await formInfo.getOrganizations()
-		const warehouses = await formInfo.getWarehouses()
-		const typePrice = await formInfo.getPriceTypes()
-		return {
-			agents,
-			payboxes,
-			organizations,
-			warehouses,
-			typePrice,
+
+	const { getFormInfo, isHaveFormInfo, formInfo } = useGetAndValidateFormInfo(
+		tokenInput,
+		orderForm
+	)
+	const { goods, loadGoodsOnSearch, isLoadingGoods } = useHandleGoods(formInfo)
+	const loadAgentsOnSearch = async () => {
+		try {
+			if (searchQuery.trim().length === 0) {
+				setAgents([])
+				return
+			}
+			setIsLoadingAgents(true)
+			const item = await formInfo.getAgents(searchQuery)
+			if (typeof item !== "string") {
+				setAgents(item.result)
+			}
+		} catch (error: unknown) {
+			if (error instanceof Error) {
+				setAgents(error.message)
+			}
+		} finally {
+			setIsLoadingAgents(false)
 		}
-	}, [])
+	}
+
 	const handleContinue = useCallback(async () => {
 		try {
 			if (tokenInput.length < 1) return
 			if (isHaveFormInfo()) return
-			const { agents, organizations, payboxes, typePrice, warehouses } =
+			const { organizations, payboxes, typePrice, warehouses } =
 				await getFormInfo()
 			setIsLoading(true)
 			if (
-				typeof agents === "string" ||
 				typeof payboxes === "string" ||
 				typeof organizations === "string" ||
 				typeof warehouses === "string" ||
@@ -66,7 +65,6 @@ export const useHandleContinue = () => {
 			)
 				throw new Error("Invalid token")
 			setOrderForm({
-				agents,
 				payboxes,
 				organizations,
 				warehouses,
@@ -89,19 +87,27 @@ export const useHandleContinue = () => {
 		(e: ChangeEvent<HTMLInputElement>) => setTokenInput(e.target.value),
 		[]
 	)
-
-	const onKeyDownSelect = (e: KeyboardEvent<HTMLDivElement>) => {
+	const debounceSearchAgents = debounce(loadAgentsOnSearch, 500)
+	const onKeyDownSelect = async (e: KeyboardEvent<HTMLDivElement>) => {
 		if (e.key.length === 1 && /[0-9+()-\s]/.test(e.key)) {
-			console.log(e.key)
 			const newQuery = searchQuery + e.key
 			setSearchQuery(newQuery)
+			await debounceSearchAgents()
 		}
 		if (e.key === "Backspace") {
-			setSearchQuery(prev => prev.slice(0, -1))
+			const newQuery = searchQuery.slice(0, -1)
+			setSearchQuery(newQuery)
+			await debounceSearchAgents()
 		}
 	}
 	const changeSearchQuery = (open: boolean) => {
-		if (open === false) setSearchQuery("")
+		if (open === false) {
+			setSearchQuery("")
+			setAgents([])
+			setIsOpen(false)
+		} else {
+			setIsOpen(true)
+		}
 	}
 	return {
 		handleContinue,
@@ -111,11 +117,15 @@ export const useHandleContinue = () => {
 		show,
 		error,
 		isLoading,
-		loadGoodsOnFocus,
+		loadGoodsOnSearch,
 		goods,
 		onKeyDownSelect,
-		filtered,
+		agents,
 		changeSearchQuery,
 		searchQuery,
+		isLoadingGoods,
+		loadAgentsOnSearch,
+		isLoadingAgents,
+		isOpen
 	}
 }

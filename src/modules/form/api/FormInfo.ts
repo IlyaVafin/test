@@ -14,10 +14,10 @@ export class FormInfo {
 	constructor(token: string) {
 		this.token = token
 	}
-	getAgents = async () => {
+	getAgents = async (phone: string) => {
 		try {
 			const response = await api.get<ResponseResult<Agent>>(
-				`/contragents?token=${this.token}`
+				`/contragents?token=${this.token}&phone=${phone}`
 			)
 
 			return response
@@ -65,9 +65,11 @@ export class FormInfo {
 			return `${error}`
 		}
 	}
-	getGoods = async () => {
+	getGood = async (name: string) => {
 		try {
-			const response = await api.get<ResponseResult<Good>>(`/nomenclature?token=${this.token}`)
+			const response = await api.get<ResponseResult<Good>>(
+				`/nomenclature?token=${this.token}&name=${name}`
+			)
 			return response
 		} catch (error) {
 			return `${error}`

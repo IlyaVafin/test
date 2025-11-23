@@ -4,21 +4,29 @@ import type { FormInfo } from "../api/FormInfo"
 
 export const useHandleGoods = (formInfo: FormInfo) => {
 	const [goods, setGoods] = useState<Good[] | string>([])
-	const handleGetGoods = async () => {
-		const goods = await formInfo.getGoods()
-		return goods
-	}
-	const loadGoodsOnFocus = async () => {
-		if (goods.length > 0) return
-		const items = await handleGetGoods()
-		if (typeof items !== "string") {
-			setGoods(items.result)
-		} else {
-			setGoods(items)
+	const [isLoadingGoods, setIsLoadingGoods] = useState(false)
+	const loadGoodsOnSearch = async (name: string) => {
+		try {
+			if (name.trim().length === 0) {
+				setGoods([])
+				return
+			}
+			setIsLoadingGoods(true)
+			const item = await formInfo.getGood(name)
+			if (typeof item !== "string") {
+				setGoods(item.result)
+			}
+		} catch (error: unknown) {
+			if (error instanceof Error) {
+				setGoods(error.message)
+			}
+		} finally {
+			setIsLoadingGoods(false)
 		}
 	}
-  return {
-    loadGoodsOnFocus,
-    goods
-  }
+	return {
+		loadGoodsOnSearch,
+		goods,
+		isLoadingGoods,
+	}
 }
