@@ -17,7 +17,7 @@ export class FormInfo {
 	getAgents = async (phone: string) => {
 		try {
 			const response = await api.get<ResponseResult<Agent>>(
-				`/contragents?token=${this.token}&phone=${phone}`
+				`/contragents/?token=${this.token}&phone=${phone}`
 			)
 
 			return response
@@ -28,7 +28,7 @@ export class FormInfo {
 	getPayBoxesList = async () => {
 		try {
 			const response = await api.get<ResponseResult<Transaction>>(
-				`/payboxes?token=${this.token}`
+				`/payboxes/?token=${this.token}`
 			)
 			return response
 		} catch (error) {
@@ -38,7 +38,7 @@ export class FormInfo {
 	getWarehouses = async () => {
 		try {
 			const response = await api.get<ResponseResult<Warehouse>>(
-				`/warehouses?token=${this.token}`
+				`/warehouses/?token=${this.token}`
 			)
 			return response
 		} catch (error) {
@@ -48,7 +48,7 @@ export class FormInfo {
 	getOrganizations = async () => {
 		try {
 			const response = await api.get<ResponseResult<Organization>>(
-				`/organizations?token=${this.token}`
+				`/organizations/?token=${this.token}`
 			)
 			return response
 		} catch (error) {
@@ -58,7 +58,7 @@ export class FormInfo {
 	getPriceTypes = async () => {
 		try {
 			const response = await api.get<ResponseResult<Price>>(
-				`/price_types?token=${this.token}`
+				`/price_types/?token=${this.token}`
 			)
 			return response
 		} catch (error) {
@@ -68,7 +68,7 @@ export class FormInfo {
 	getGood = async (name: string) => {
 		try {
 			const response = await api.get<ResponseResult<Good>>(
-				`/nomenclature?token=${this.token}&name=${name}`
+				`/nomenclature/?token=${this.token}&name=${name}`
 			)
 			return response
 		} catch (error) {
